@@ -7,16 +7,21 @@ import slotRouter from './routes/slot.routes.js';
 import bookingRouter from './routes/booking.routes.js';
 import notificationRouter from './routes/notification.routes.js';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config({ quiet: true });
 
 const app = express();
 
+const FRONTEND_URLS = (process.env.FRONTEND_URLS || 'http://localhost:5173,http://127.0.0.1:5173,https://smart-interview-scheduler-smoky.vercel.app').split(',').map(u => u.trim());
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000','https://smart-interview-scheduler-smoky.vercel.app'],
+  origin: FRONTEND_URLS,
   credentials: true
 }))
 
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+  const allowedOrigins = FRONTEND_URLS;
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
